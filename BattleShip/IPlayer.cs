@@ -8,7 +8,8 @@ namespace BattleShip
     {
         IPlayer opponent { get; set; }
         bool HasLost();
-        void Attack();
-        void PlaceShipOnBoard(int x, int y);
+        void Attack(int x, int y);
+        bool HitFromOpponent(int x, int y);
+        bool PlaceShipOnBoard(ShipPosition pos);
     }
 }
