@@ -6,8 +6,7 @@ namespace BattleShip
     {
         static void Main(string[] args)
         {
-            ILauncher game = new BattleShipAdmin();
-            IPlayer[] players = game.Initialize();
+            IPlayer[] players = BattleShipAdmin.Initialize();
 
             IPlayer p1 = players[0];
             IPlayer p2 = players[1];

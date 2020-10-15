@@ -4,11 +4,11 @@ using System.Text;
 
 namespace BattleShip
 {
-    class BattleShipAdmin : ILauncher
+    public  class BattleShipAdmin 
     {
-        int NumOfPlayers = 2;
-        Dictionary<IPlayer, IPlayer> PlayersMapping = new Dictionary<IPlayer, IPlayer>();
-        public IPlayer[] Initialize()
+        const int NumOfPlayers = 2;
+        //Dictionary<IPlayer, IPlayer> PlayersMapping = new Dictionary<IPlayer, IPlayer>();
+        public static IPlayer[] Initialize()
         {
             IPlayer[] players = new Player[NumOfPlayers];
             for (int i = 0; i < NumOfPlayers; i++)
@@ -18,15 +18,15 @@ namespace BattleShip
             players[0].opponent = players[1];
             players[1].opponent = players[0];
 
-            PlayersMapping.Add(players[0], players[1]);
-            PlayersMapping.Add(players[1], players[0]);
+            //PlayersMapping.Add(players[0], players[1]);
+            //PlayersMapping.Add(players[1], players[0]);
 
             return players;
         }
 
-        public static  bool AttackHandler(int x, int y, IPlayer player)
+        public static bool AttackHandler(int x, int y, IPlayer opponent)
         {
-            return player.opponent.HitFromOpponent(x, y);
+            return opponent.HitFromOpponent(x, y);
         }
     }
 }

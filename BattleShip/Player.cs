@@ -18,22 +18,31 @@ namespace BattleShip
         {
             public List<Cell> _deck { get; set; }
         }
-        int[,] Board;
+        private int[,] Board;
+        private const int BoardSquareOf = 10;
+        private List<Ship> Ships;
+        private BattleShipWrapper wrapper;
 
-        List<Ship> Ships;
-
-        private bool Validate (ShipPosition pos) =>  pos.X < 0 || pos.Y < 0 || pos.Y > 9 || pos.X > 9 || pos.Length > 9 || pos.Length < 1;
+        private bool WrongPosition (ShipPosition pos) =>  pos==null || pos.X < 0 || pos.Y < 0 || pos.Y > 9 || pos.X > 9 || pos.Length > 10 || pos?.Length < 1;
+        private bool ValidateCoordinates(int x, int y) => x >= 0 && x < 10 && y >= 0 && y < 10;
         public Player()
         {
-            Board = new int[10, 10];
+            Board = new int[BoardSquareOf, BoardSquareOf];
             Ships = new List<Ship>();
+            wrapper = new BattleShipWrapper();
         }
         public IPlayer opponent { get; set; }
 
-        public void Attack(int X, int Y)
+        public bool Attack(int X, int Y)
         {
-            // Code for no ship initialized
-            bool ret = BattleShipAdmin.AttackHandler(X, Y, this);
+            if (!ValidateCoordinates(X, Y))
+                return false;
+
+            // Can't attack as no ship has been placed
+            if (Ships.Count == 0)
+                return false;
+
+            return wrapper.AttackHandler(X, Y, opponent);
         }
 
         public bool HasLost()
@@ -43,7 +52,7 @@ namespace BattleShip
 
         public bool PlaceShipOnBoard(ShipPosition pos)
         {
-            if (Validate(pos))
+            if (WrongPosition(pos))
                 return false;
 
             bool ret = true;
@@ -52,13 +61,15 @@ namespace BattleShip
             {
                 for (int i = 0; i < pos.Length && ret; i++)
                 {
-                    if (pos.X + i >= 10)
+                    if (pos.X + i >= 10 || // Out of Bound
+                            Board[pos.X + i, pos.Y] == 1) // Overlap
                     {
                         ret = false;
                     }
                     else
                     {
                         ship.Add(new Cell { X = pos.X + i, Y = pos.Y });
+                        Board[pos.X + i, pos.Y] = 1;
                     }
                 }
             }
@@ -66,13 +77,15 @@ namespace BattleShip
             {
                 for (int i = 0; i < pos.Length && ret; i++)
                 {
-                    if (pos.Y + i >= 10)
+                    if (pos.Y + i >= 10 ||  // Out of Bound
+                            Board[pos.X, pos.Y + i] == 1) // Overlap
                     {
                         ret = false;
                     }
                     else
                     {
                         ship.Add(new Cell { X = pos.X, Y = pos.Y + i });
+                        Board[pos.X, pos.Y + i] = 1;
                     }
                 }
             }
@@ -93,6 +106,7 @@ namespace BattleShip
             if(affectedShip?._deck != null)
             {
                 affectedShip._deck.Remove(cell);
+                Board[x, y] = 0;
                 if(affectedShip._deck.Count == 0)
                 {
                     Ships.Remove(affectedShip);
