@@ -7,20 +7,22 @@ using System.Text;
 
 namespace BattleShip
 {
-    class Player : IPlayer
+    public class Player : IPlayer
     {
-        public struct Cell 
+        public struct Cell
         {
             public int X { get; set; }
             public int Y { get; set; }
         }
         class Ship
         {
-            public List<Cell> _ship { get; set; }
+            public List<Cell> _deck { get; set; }
         }
         int[,] Board;
 
-        List<Ship> Ships; 
+        List<Ship> Ships;
+
+        private bool Validate (ShipPosition pos) =>  pos.X < 0 || pos.Y < 0 || pos.Y > 9 || pos.X > 9 || pos.Length > 9 || pos.Length < 1;
         public Player()
         {
             Board = new int[10, 10];
@@ -30,6 +32,7 @@ namespace BattleShip
 
         public void Attack(int X, int Y)
         {
+            // Code for no ship initialized
             bool ret = BattleShipAdmin.AttackHandler(X, Y, this);
         }
 
@@ -40,6 +43,9 @@ namespace BattleShip
 
         public bool PlaceShipOnBoard(ShipPosition pos)
         {
+            if (Validate(pos))
+                return false;
+
             bool ret = true;
             List<Cell> ship = new List<Cell>();
             if (pos.Align == ShipPosition.AlignmentType.Horizontal)
@@ -72,7 +78,7 @@ namespace BattleShip
             }
             if (ret)
             {
-                Ships.Add(new Ship { _ship = ship });
+                Ships.Add(new Ship { _deck = ship });
             }
             return ret;
         }
@@ -82,11 +88,15 @@ namespace BattleShip
             Cell cell = new Cell { X = x, Y = y };
             Ship affectedShip = (from ship in Ships
                         //from cell in ship._ship
-                    where ship._ship.Any(t => t.X == x & t.Y == y)
+                    where ship._deck.Any(t => t.X == x & t.Y == y)
                     select ship).FirstOrDefault();
-            if(affectedShip?._ship != null)
+            if(affectedShip?._deck != null)
             {
-                affectedShip._ship.Remove(cell);
+                affectedShip._deck.Remove(cell);
+                if(affectedShip._deck.Count == 0)
+                {
+                    Ships.Remove(affectedShip);
+                }
                 return true;
             }
 
