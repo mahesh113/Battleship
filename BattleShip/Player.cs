@@ -97,11 +97,12 @@ namespace BattleShip
         }
         public bool HitFromOpponent(int x, int y)
         {
+            if (!ValidateCoordinates(x, y))
+                return false;
 
             Cell cell = new Cell { X = x, Y = y };
             Ship affectedShip = (from ship in Ships
-                        //from cell in ship._ship
-                    where ship._deck.Any(t => t.X == x & t.Y == y)
+                    where ship._deck.Contains(cell)
                     select ship).FirstOrDefault();
             if(affectedShip?._deck != null)
             {

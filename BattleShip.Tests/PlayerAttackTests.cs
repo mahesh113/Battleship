@@ -99,5 +99,26 @@ namespace BattleShip.Tests
             ret = player1.HasLost();
             Assert.True(ret);
         }
+        [Fact]
+        public void InvalidCoordinates()
+        {
+            Setup();
+
+            ShipPosition pos = new ShipPosition
+            {
+                X = 0,
+                Y = 4,
+                Length = 5,
+                Align = ShipPosition.AlignmentType.Vertical
+            };
+            bool ret = player1.Attack(5, 10);
+            Assert.False(ret);
+            ret = player1.Attack(1, -1);
+            Assert.False(ret);
+            ret = player1.Attack(10, 3);
+            Assert.False(ret);
+            ret = player1.Attack(-1, 6);
+            Assert.False(ret);
+        }
     }
 }

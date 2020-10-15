@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BattleShip
 {
-    public  class BattleShipAdmin 
+    public static class BattleShipAdmin 
     {
         const int NumOfPlayers = 2;
         //Dictionary<IPlayer, IPlayer> PlayersMapping = new Dictionary<IPlayer, IPlayer>();
