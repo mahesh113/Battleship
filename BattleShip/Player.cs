@@ -9,6 +9,12 @@ namespace BattleShip
 {
     public class Player : IPlayer
     {
+        enum eHitMissType
+        {
+            NotAttempted=0,
+            Hit,
+            Miss
+        }
         public struct Cell
         {
             public int X { get; set; }
@@ -19,6 +25,8 @@ namespace BattleShip
             public List<Cell> _deck { get; set; }
         }
         private int[,] Board;
+        private eHitMissType[,] OpponentBoard;
+
         private const int BoardSquareOf = 10;
         private List<Ship> Ships;
         private BattleShipWrapper wrapper;
@@ -28,6 +36,8 @@ namespace BattleShip
         public Player()
         {
             Board = new int[BoardSquareOf, BoardSquareOf];
+            OpponentBoard = new eHitMissType[BoardSquareOf, BoardSquareOf];
+
             Ships = new List<Ship>();
             wrapper = new BattleShipWrapper();
         }
@@ -39,10 +49,13 @@ namespace BattleShip
                 return false;
 
             // Can't attack as no ship has been placed
-            if (Ships.Count == 0)
+            if (Ships.Count == 0 || OpponentBoard[X,Y]!= eHitMissType.NotAttempted)
                 return false;
 
-            return wrapper.AttackHandler(X, Y, opponent);
+            bool hit =  wrapper.AttackHandler(X, Y, opponent);
+            OpponentBoard[X, Y] = hit ? eHitMissType.Hit : eHitMissType.Miss;
+
+            return hit;
         }
 
         public bool HasLost()
