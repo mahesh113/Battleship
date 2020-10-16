@@ -2,6 +2,8 @@
 ## Download
 
 ```
+$ mkdir Battle/
+$ cd Battle/
 $ git clone https://github.com/mahesh113/Battleship.git
 ```
 
@@ -10,12 +12,12 @@ $ git clone https://github.com/mahesh113/Battleship.git
 
 ```
 
-1. pen the solutions file BattleShip/BattleShip.sln
+1. Open the solutions file BattleShip/BattleShip.sln
 2. When the project loads, Please F6 to build the solution.
 3. Open the Test Explorer and Run all the Test cases.
 
 ```
 
 
-# Thanks
+Thanks
 Mahesh Mohit Verma
