@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BattleShip
+﻿namespace BattleShip
 {
     public static class BattleShipAdmin 
     {
@@ -22,7 +18,10 @@ namespace BattleShip
 
         public static bool AttackHandler(int x, int y, IPlayer opponent)
         {
-            return opponent.HitFromOpponent(x, y);
+            if(opponent != null)
+                return opponent.HitFromOpponent(x, y);
+
+            return false;
         }
     }
 }
